@@ -1,4 +1,7 @@
 using Ap1_P1_LiamellCruz.Components;
+using Ap1_P1_LiamellCruz.DAL;
+using Ap1_P1_LiamellCruz.Models;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,7 +9,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.Services.AddRazorComponents("ConStr");
+var ConStr = builder.Configuration.GetConnectionString("ConStr");
+
+builder.Services.AddDbContext<Contexto>(Options => Options.UseSqlite(ConStr));
+
+builder.Services.AddScoped<Articulos>();
+
 
 var app = builder.Build();
 
