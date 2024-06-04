@@ -19,7 +19,6 @@ public class ArticuloService
     {
     return await _contexto.Articulos
    .Where.(a => a.ArticuloId == articuloId);
-
     }
 
     public async Task<bool> Insertar(Articulos articulos)
