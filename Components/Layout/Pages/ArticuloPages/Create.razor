@@ -1,0 +1,96 @@
+﻿@page "/Articulo/Create"
+@using Ap1_P1_LiamellCruz.Models
+@using Ap1_P1_LiamellCruz.Services
+@using Ap1_P1_LiamellCruz.DAL 
+@inject Articulos articulos 
+@inject ArticuloService articuloservice 
+@inject NavigationManager navigationManager
+@inject IJSRuntime jsRuntime
+
+@rendermode InteractiveServer
+
+<PageTitle>Articulos</PageTitle>
+<EditForm Model="articulos" OnvalidationSubmit="Guardar">
+
+    <div class="container">
+        <div class="card-header">
+            <h1>Articuloss</h1>
+        </div>
+        <div class="card-body">
+            <div class="col-2">
+                <label>ArticuloId:</label>
+                <div class="id-input">
+                    <InputNumber @bind-Value="articulos.Articulos" readonly class="form-control"></InputNumber>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <label>Descripcion:</label>
+                <InputText class="form-control" @bind-Value="articulos.Descripcion"></InputText>
+                <ValidationMessage For="@(() => articulos.Descripcion)" />
+            </div>
+
+            <div class="col-md-6">
+                <label>Costo:</label>
+                <InputNumber @bind-Value="articulos." class="form-control"></InputNumber>
+                <ValidationMessage For="@(() => articulos.Costo)" />
+            </div>
+
+            <div class="col-md-6">
+                <label>Ganancia:</label>
+                <InputNumber @bind-Value="articulos." class="form-control"></InputNumber>
+                <ValidationMessage For="@(() => articulos.Ganancia)" />
+            </div>
+
+            <div class="col-md-6">
+                <label>Precio:</label>
+                <InputNumber @bind-Value="articulos." class="form-control"></InputNumber>
+                <ValidationMessage For="@(() => articulos.Precio)" />
+            </div>
+        </div>
+        <div class="card-footer d-flex justify-content-between">
+            <button type="button" class="btn btn-primary" @onclick="() => Guardar()">
+                <span>Crear <i class="bi bi-file-earmark" /></span>
+            </button>
+            <button type="button" class="btn btn-secondary" @onclick="Volver">
+                <span>Volver a Consulta</span> <i class="bi bi-arrow-return-left" />
+            </button>
+        </div>
+        @mensaje
+    </div>
+</EditForm>
+
+
+@code {
+    private Articulos articulos { get; set; } = new Articulos();
+    private string mensaje = string.Empty;
+
+    private async Task Guardar()
+    {
+        if (!await Validar())
+        {
+            if (await articuloservice.Insertar(this.tecnicos))
+            {
+                ClearForm();
+                mensaje = "El articulo fue guardado correctamente.";
+                //Volver();
+            }
+            else
+            {
+                ClearForm();
+                mensaje = "No se puedo guardar.";
+            }
+        }
+    }
+
+    private void ClearForm()
+    {
+        tecnicos = new Articulos();     
+        mensaje = string.Empty;
+    }
+
+    void Volver()
+    {
+        navigationManager.NavigateTo("Articulo/Consultar");
+    }
+}

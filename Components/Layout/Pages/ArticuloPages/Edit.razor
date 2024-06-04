@@ -1,0 +1,95 @@
+﻿@page "/Articulo/Edit/{ArticuloId:int}"
+@using Ap1_P1_LiamellCruz.Services
+@using Ap1_P1_LiamellCruz.Models
+@using Ap1_P1_LiamellCruz.Services
+@using Ap1_P1_LiamellCruz.DAL
+@inject Articulos articulos
+@inject ArticuloService articuloService
+@inject NavigationManager navigationManager
+@inject IJSRuntime jsRuntime
+@rendermode InteractiveServer
+
+<PageTitle>Articulos</PageTitle>
+<EditForm Model="articulos" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+    <div class="container">
+        <div class="card-header">
+            <h1>Editar articulos</h1>
+        </div>
+        <div class="card-body">
+            <label>ArticuloId:</label>
+            <div class="col-2">
+                <InputNumber readOnly @bind-Value="articulos.ArticuloId" class="form-control"></InputNumber>
+            </div>
+
+            <div class="col-md-6">
+                <label>Descripcion:</label>
+                <InputText @bind-Value="articulos.Descripcion" class="form-control"></InputText>
+                <ValidationMessage For="@(() => articulos.Descripcion)" />
+            </div>
+
+            <div class="col-md-6">
+                <label>Costo:</label>
+                <InputNumber @bind-Value="articuloservice.Costo" class="form-control"></InputNumber>
+                <ValidationMessage For="@(() => articulos.Costo)" />
+            </div>
+
+            <div class="col-md-6">
+                <label>Ganancia:</label>
+                <InputNumber @bind-Value="articulos." class="form-control"></InputNumber>
+                <ValidationMessage For="@(() => articulos.Ganancia)" />
+            </div>
+
+            <div class="col-md-6">
+                <label>Precio:</label>
+                <InputNumber @bind-Value="articulos." class="form-control"></InputNumber>
+                <ValidationMessage For="@(() => articulos.Precio)" />
+            </div>
+
+        </div>
+        <div class="card-footer d-flex justify-content-between">
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-file-earmark" /> Editar
+            </button>
+            <button type="button" class="btn btn-secondary" @onclick="volver">
+                <span>Volver a Consulta</span> <i class="bi bi-arrow-return-left" />
+            </button>
+        </div>
+        @mensaje
+    </div>
+
+</EditForm>
+
+
+@code {
+    [Parameter]
+    public int ArticuloId { get; set; }
+    public Articulos articulos { get; set; } = new Articulos();
+    public string mensaje = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        tecnicos = await articulosService.Buscar(TecnicosId);
+    }
+
+    public async Task Guardar()
+    {
+        if (!await Validar())
+        {
+            var tecnicoModificado = await articuloService.Guardar(tecnicos);
+
+            if (tecnicoModificado)
+            {
+                volver();
+            }
+        }
+    }
+
+    void volver()
+    {
+        navigationManager.NavigateTo("Articulo/Consultar");
+    }
+
+
+
+}
